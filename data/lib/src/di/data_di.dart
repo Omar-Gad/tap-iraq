@@ -33,6 +33,9 @@ abstract class DataDI {
           apiProvider: locator(),
           localDataProvider: locator(),
         ),
+      )
+      ..registerLazySingleton<AddressRepository>(
+        () => AddressRepositoryImpl(locator()),
       );
   }
 }

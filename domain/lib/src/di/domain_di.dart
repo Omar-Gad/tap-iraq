@@ -8,6 +8,15 @@ abstract class DomainDi {
       ..registerFactory<RegisterUseCase>(() => RegisterUseCase(locator()))
       ..registerFactory<SignOutUseCase>(() => SignOutUseCase(locator()))
       ..registerFactory<CheckSessionUseCase>(
-          () => CheckSessionUseCase(locator()));
+          () => CheckSessionUseCase(locator()))
+      ..registerFactory<GetAddressesUseCase>(
+          () => GetAddressesUseCase(locator()))
+      ..registerFactory<AddAddressUseCase>(() => AddAddressUseCase(locator()))
+      ..registerFactory<UpdateAddressUseCase>(
+          () => UpdateAddressUseCase(locator()))
+      ..registerFactory<DeleteAddressUseCase>(
+          () => DeleteAddressUseCase(locator()))
+      ..registerFactory<SetDefaultAddressUseCase>(
+          () => SetDefaultAddressUseCase(locator()));
   }
 }
