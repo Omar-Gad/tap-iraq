@@ -20,6 +20,8 @@ dependencies:
     path: ./data
   navigation:
     path: ./navigation
+  auth:
+    path: ./features/auth
 dev_dependencies:
   flutter_test:
     sdk: flutter
