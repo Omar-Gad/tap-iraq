@@ -38,6 +38,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Success!')),
               );
+              context.router.replaceNamed('/home');
             }
           },
           builder: (context, state) {

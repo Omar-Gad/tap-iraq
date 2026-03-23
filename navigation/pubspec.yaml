@@ -14,7 +14,8 @@ dependencies:
     path: ../core
   auth:
     path: ../features/auth
-
+  home:
+    path: ../features/home
 dev_dependencies:
   flutter_test:
     sdk: flutter

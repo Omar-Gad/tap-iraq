@@ -1,4 +1,5 @@
 import 'package:data/data.dart';
+import 'package:data/src/mappers/address_mapper.dart';
 import 'package:data/src/providers/mock/app_database.dart';
 import 'package:drift/drift.dart';
 import 'package:faker/faker.dart';
@@ -105,5 +106,65 @@ class FakeApiProvider implements ApiProvider {
       );
       _currentUserId = null;
     }
+  }
+
+  @override
+  Future<List<AddressModel>> getAddresses(int userId) async {
+    final result = await (_db.select(_db.addresses)
+          ..where((t) => t.userId.equals(userId)))
+        .get();
+    return result.map(AddressMapper.fromDriftToDto).toList();
+  }
+
+  @override
+  Future<AddressModel> addAddress(AddressModel address) async {
+    final id = await _db.into(_db.addresses).insert(
+          AddressesCompanion.insert(
+            userId: address.userId,
+            street: address.street,
+            propertyType: address.propertyType,
+            propertySize: address.propertySize,
+            isDefault: Value(address.isDefault),
+          ),
+        );
+
+    final inserted = await (_db.select(_db.addresses)
+          ..where((t) => t.id.equals(id)))
+        .getSingle();
+
+    return AddressMapper.fromDriftToDto(inserted);
+  }
+
+  @override
+  Future<AddressModel> updateAddress(AddressModel address) async {
+    await (_db.update(_db.addresses)..where((t) => t.id.equals(address.uid)))
+        .write(
+      AddressesCompanion(
+        street: Value(address.street),
+        propertyType: Value(address.propertyType),
+        propertySize: Value(address.propertySize),
+        isDefault: Value(address.isDefault),
+      ),
+    );
+
+    final updated = await (_db.select(_db.addresses)
+          ..where((t) => t.id.equals(address.uid)))
+        .getSingle();
+
+    return AddressMapper.fromDriftToDto(updated);
+  }
+
+  @override
+  Future<void> deleteAddress(int addressId) async {
+    await (_db.delete(_db.addresses)..where((t) => t.id.equals(addressId))).go();
+  }
+
+  @override
+  Future<void> setDefaultAddress(int userId, int addressId) async {
+    await (_db.update(_db.addresses)..where((t) => t.userId.equals(userId)))
+        .write(const AddressesCompanion(isDefault: Value(false)));
+
+    await (_db.update(_db.addresses)..where((t) => t.id.equals(addressId)))
+        .write(const AddressesCompanion(isDefault: Value(true)));
   }
 }

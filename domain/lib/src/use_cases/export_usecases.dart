@@ -3,3 +3,8 @@ export 'auth/register_usecase.dart';
 export 'auth/log_out_usecase.dart';
 export 'auth/check_session_usecase.dart';
 export 'usecase.dart';
+export 'address/delete_adress_usecase.dart';
+export 'address/get_adresses_usecase.dart';
+export 'address/add_adress_usecase.dart';
+export 'address/update_adress_usecase.dart';
+export 'address/set_default_adress_usecase.dart';
