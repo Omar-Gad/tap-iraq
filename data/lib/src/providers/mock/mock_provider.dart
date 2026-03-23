@@ -156,7 +156,8 @@ class FakeApiProvider implements ApiProvider {
 
   @override
   Future<void> deleteAddress(int addressId) async {
-    await (_db.delete(_db.addresses)..where((t) => t.id.equals(addressId))).go();
+    await (_db.delete(_db.addresses)..where((t) => t.id.equals(addressId)))
+        .go();
   }
 
   @override
@@ -166,5 +167,121 @@ class FakeApiProvider implements ApiProvider {
 
     await (_db.update(_db.addresses)..where((t) => t.id.equals(addressId)))
         .write(const AddressesCompanion(isDefault: Value(true)));
+  }
+
+  Future<void> _ensureServicesExist() async {
+    final existing = await _db.select(_db.cleaningServices).get();
+    if (existing.isEmpty) {
+      final services = [
+        CleaningServicesCompanion.insert(
+          name: 'Regular Cleaning',
+          description: 'Standard house cleaning for everyday maintenance.',
+          price: 50.0,
+          duration: '2h',
+        ),
+        CleaningServicesCompanion.insert(
+          name: 'Deep Cleaning',
+          description:
+              'Thorough cleaning for hard-to-reach places and stubborn dirt.',
+          price: 100.0,
+          duration: '4h',
+        ),
+        CleaningServicesCompanion.insert(
+          name: 'Post-Construction Cleaning',
+          description:
+              'Intense cleaning after renovation or construction work.',
+          price: 200.0,
+          duration: '6h',
+        ),
+      ];
+
+      for (final service in services) {
+        await _db.into(_db.cleaningServices).insert(service);
+      }
+    }
+  }
+
+  @override
+  Future<List<CleaningServiceModel>> getCleaningServices() async {
+    await _ensureServicesExist();
+    final result = await _db.select(_db.cleaningServices).get();
+    return result
+        .map((s) => CleaningServiceModel(
+              id: s.id,
+              name: s.name,
+              description: s.description,
+              price: s.price,
+              duration: s.duration,
+            ))
+        .toList();
+  }
+
+  @override
+  Future<List<CleaningRequestModel>> getCleaningRequests() async {
+    final result = await _db.select(_db.cleaningRequests).get();
+    return result.map(_mapRequestToModel).toList();
+  }
+
+  @override
+  Future<List<CleaningRequestModel>> getUpcomingCleaningRequests() async {
+    final upcomingStatuses = [0, 1]; // scheduled, inProgress
+    final result = await (_db.select(_db.cleaningRequests)
+          ..where((t) => t.status.isIn(upcomingStatuses)))
+        .get();
+    return result.map(_mapRequestToModel).toList();
+  }
+
+  @override
+  Future<List<CleaningRequestModel>> getPastCleaningRequests() async {
+    final pastStatuses = [2, 3]; // completed, canceled
+    final result = await (_db.select(_db.cleaningRequests)
+          ..where((t) => t.status.isIn(pastStatuses)))
+        .get();
+    return result.map(_mapRequestToModel).toList();
+  }
+
+  @override
+  Future<CleaningRequestModel> createCleaningRequest(
+      CleaningRequestModel request) async {
+    final id = await _db.into(_db.cleaningRequests).insert(
+          CleaningRequestsCompanion.insert(
+            userId: _currentUserId ?? 1,
+            serviceId: request.serviceId,
+            addressId: request.addressId,
+            scheduledAt: request.scheduledAt,
+            status: request.status,
+            cleanerName: Value(request.cleanerName),
+            cleanerPhone: Value(request.cleanerPhone),
+            cleanerPhotoUrl: Value(request.cleanerPhotoUrl),
+          ),
+        );
+
+    final inserted = await (_db.select(_db.cleaningRequests)
+          ..where((t) => t.id.equals(id)))
+        .getSingle();
+
+    return _mapRequestToModel(inserted);
+  }
+
+  @override
+  Future<void> cancelCleaningRequest(int requestId) async {
+    await (_db.update(_db.cleaningRequests)
+          ..where((t) => t.id.equals(requestId)))
+        .write(
+      const CleaningRequestsCompanion(status: Value(3)), // 3 is now 'canceled'
+    );
+  }
+
+  CleaningRequestModel _mapRequestToModel(CleaningRequestEntry r) {
+    return CleaningRequestModel(
+      id: r.id,
+      serviceId: r.serviceId,
+      addressId: r.addressId,
+      scheduledAt: r.scheduledAt,
+      status: r.status,
+      cleanerName: r.cleanerName,
+      cleanerPhone: r.cleanerPhone,
+      cleanerPhotoUrl: r.cleanerPhotoUrl,
+    );
   }
 }

@@ -14,8 +14,6 @@ dependencies:
     path: ../../core_ui
   domain:
     path: ../../domain
-  navigation:
-    path: ../../navigation
   auto_route: ^7.8.4
 
 dev_dependencies:

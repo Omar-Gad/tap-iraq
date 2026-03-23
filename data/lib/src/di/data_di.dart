@@ -36,6 +36,9 @@ abstract class DataDI {
       )
       ..registerLazySingleton<AddressRepository>(
         () => AddressRepositoryImpl(locator()),
+      )
+      ..registerLazySingleton<CleaningRepository>(
+        () => CleaningRepositoryImpl(locator()),
       );
   }
 }

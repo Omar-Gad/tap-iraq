@@ -7,5 +7,5 @@ export 'src/bloc/address/address_cubit.dart';
 export 'src/bloc/address/address_state.dart';
 export 'home.gm.dart';
 
-@AutoRouterConfig.module(replaceInRouteName: 'Screen|Dialog,Route')
+@AutoRouterConfig.module(replaceInRouteName: 'Screen,Route')
 class HomeModule extends $HomeModule {}
