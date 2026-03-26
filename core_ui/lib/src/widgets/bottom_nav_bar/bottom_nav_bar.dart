@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/theme.dart';
+
 part 'bottom_nav_bar_item.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -30,24 +32,23 @@ class BottomNavBar extends StatelessWidget {
         top: 12,
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _buildItem(0, 'Cleaning', Icons.cleaning_services_rounded),
-          _buildItem(1, 'Orders', Icons.list_alt_rounded),
-          _buildItem(2, 'Profile', Icons.person_rounded),
-          _buildItem(3, 'Settings', Icons.settings_rounded),
+          _buildItem(0, 'Home', Icons.home_rounded),
+          _buildItem(1, 'Bookings', Icons.calendar_month_rounded),
+          _buildItem(2, 'Addresses', Icons.location_on_rounded),
+          _buildItem(3, 'Profile', Icons.person_rounded),
         ],
       ),
     );
   }
 
   Widget _buildItem(int index, String title, IconData icon) {
-    return Expanded(
-      child: _BottomNavBarItem(
-        isActive: currentIndex == index,
-        title: title,
-        icon: icon,
-        onTap: () => onTap(index),
-      ),
+    return _BottomNavBarItem(
+      isActive: currentIndex == index,
+      title: title,
+      icon: icon,
+      onTap: () => onTap(index),
     );
   }
 }

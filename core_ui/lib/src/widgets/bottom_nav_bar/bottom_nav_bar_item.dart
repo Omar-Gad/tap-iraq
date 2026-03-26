@@ -19,46 +19,61 @@ class _BottomNavBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isActive ? Theme.of(context).primaryColor : Colors.grey;
-    
-    return InkWell(
+    final AppColors colors = AppColors.of(context);
+    final Color activeColor = colors.tertiary[500]!;
+    final Color inactiveColor = colors.secondary[400]!;
+
+    final Color contentColor = isActive ? activeColor : inactiveColor;
+
+    return GestureDetector(
       onTap: isEnabled ? onTap : null,
+      behavior: HitTestBehavior.opaque,
       child: Opacity(
         opacity: isEnabled ? 1.0 : 0.5,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
-              children: [
-                Icon(icon, color: color),
-                if (showNotification)
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 8,
-                        minHeight: 8,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          decoration: BoxDecoration(
+            color: isActive ? colors.tertiary[50] : Colors.transparent,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(icon, color: contentColor, size: 24),
+                  if (showNotification)
+                    Positioned(
+                      right: -2,
+                      top: -2,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 8,
+                          minHeight: 8,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: TextStyle(
-                color: color,
-                fontSize: 12,
-                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                title.toUpperCase(),
+                style: AppFonts.medium10.copyWith(
+                  color: contentColor,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
