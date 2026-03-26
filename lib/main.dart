@@ -12,7 +12,13 @@ void main() async {
   await DomainDi.init(appLocator);
   NavigationDI.init(appLocator);
 
+  final authRepository = appLocator<AuthRepository>();
+  final isLoggedIn = await authRepository.checkSession();
+
   runApp(
-    App(appRouter: appLocator<AppRouter>()),
+    App(
+      appRouter: appLocator<AppRouter>(),
+      isLoggedIn: isLoggedIn,
+    ),
   );
 }

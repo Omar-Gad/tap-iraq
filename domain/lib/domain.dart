@@ -5,3 +5,4 @@ export 'src/repositories/auth_repository.dart';
 export 'src/use_cases/export_usecases.dart';
 export 'src/di/domain_di.dart';
 export 'src/repositories/address_repository.dart';
+export 'src/repositories/cleaning_repository.dart';

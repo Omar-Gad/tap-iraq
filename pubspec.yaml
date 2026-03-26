@@ -22,6 +22,7 @@ dependencies:
     path: ./navigation
   auth:
     path: ./features/auth
+  auto_route: ^7.9.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

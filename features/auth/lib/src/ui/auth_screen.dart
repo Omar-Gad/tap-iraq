@@ -35,10 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 SnackBar(content: Text(state.message)),
               );
             } else if (state is AuthSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Success!')),
-              );
-              context.router.replaceNamed('/home');
+              AutoRouter.of(context).root.navigateNamed('/home');
             }
           },
           builder: (context, state) {

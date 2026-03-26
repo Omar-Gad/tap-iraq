@@ -13,4 +13,13 @@ abstract class ApiProvider {
   Future<AddressModel> updateAddress(AddressModel address);
   Future<void> deleteAddress(int addressId);
   Future<void> setDefaultAddress(int userId, int addressId);
+
+  // Cleaning
+  Future<List<CleaningServiceModel>> getCleaningServices();
+  Future<List<CleaningRequestModel>> getCleaningRequests();
+  Future<List<CleaningRequestModel>> getUpcomingCleaningRequests();
+  Future<List<CleaningRequestModel>> getPastCleaningRequests();
+  Future<CleaningRequestModel> createCleaningRequest(
+      CleaningRequestModel request);
+  Future<void> cancelCleaningRequest(int requestId);
 }

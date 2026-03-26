@@ -9,5 +9,5 @@ export 'src/bloc/auth_cubit.dart';
 export 'src/bloc/auth_state.dart';
 export 'auth.gm.dart';
 
-@AutoRouterConfig.module(replaceInRouteName: 'Screen|Dialog,Route')
+@AutoRouterConfig.module(replaceInRouteName: 'Screen,Route')
 class AuthModule extends $AuthModule {}

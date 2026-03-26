@@ -17,6 +17,18 @@ abstract class DomainDi {
       ..registerFactory<DeleteAddressUseCase>(
           () => DeleteAddressUseCase(locator()))
       ..registerFactory<SetDefaultAddressUseCase>(
-          () => SetDefaultAddressUseCase(locator()));
+          () => SetDefaultAddressUseCase(locator()))
+      ..registerFactory<GetCleaningServicesUseCase>(
+          () => GetCleaningServicesUseCase(repository: locator()))
+      ..registerFactory<GetCleaningRequestsUseCase>(
+          () => GetCleaningRequestsUseCase(repository: locator()))
+      ..registerFactory<GetUpcomingCleaningRequestsUseCase>(
+          () => GetUpcomingCleaningRequestsUseCase(repository: locator()))
+      ..registerFactory<GetPastCleaningRequestsUseCase>(
+          () => GetPastCleaningRequestsUseCase(repository: locator()))
+      ..registerFactory<CreateCleaningRequestUseCase>(
+          () => CreateCleaningRequestUseCase(repository: locator()))
+      ..registerFactory<CancelCleaningRequestUseCase>(
+          () => CancelCleaningRequestUseCase(repository: locator()));
   }
 }

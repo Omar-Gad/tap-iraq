@@ -5,7 +5,7 @@ import 'package:domain/domain.dart';
 
 class AddressMapper {
   // From Drift to Domain
-  static UserAddress fromDriftToEntity(Address model) {
+  static UserAddress fromDriftToEntity(AddressEntry model) {
     return UserAddress(
       id: model.id,
       userId: model.userId,
@@ -53,7 +53,7 @@ class AddressMapper {
   }
 
   // From Drift to DTO (API) - used in FakeApiProvider
-  static AddressModel fromDriftToDto(Address model) {
+  static AddressModel fromDriftToDto(AddressEntry model) {
     return AddressModel(
       uid: model.id,
       userId: model.userId,
