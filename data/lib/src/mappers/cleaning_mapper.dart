@@ -6,13 +6,23 @@ import 'package:domain/domain.dart';
 class CleaningMapper {
   // --- Services ---
 
-  static CleaningService fromDriftService(db.CleaningServiceEntry model) {
+  static CleaningService fromDriftService(db.CleaningServiceEntry model, List<db.CleaningTypeEntry> types) {
     return CleaningService(
+      id: model.id,
+      name: model.name,
+      description: model.description,
+      types: types.map(fromDriftType).toList(),
+    );
+  }
+
+  static CleaningType fromDriftType(db.CleaningTypeEntry model) {
+    return CleaningType(
       id: model.id,
       name: model.name,
       description: model.description,
       price: model.price,
       duration: model.duration,
+      isPopular: model.isPopular,
     );
   }
 
@@ -21,8 +31,6 @@ class CleaningMapper {
       id: entity.id != 0 ? Value(entity.id) : const Value.absent(),
       name: Value(entity.name),
       description: Value(entity.description),
-      price: Value(entity.price),
-      duration: Value(entity.duration),
     );
   }
 
@@ -41,6 +49,7 @@ class CleaningMapper {
     return CleaningRequest(
       id: model.id,
       serviceId: model.serviceId,
+      typeId: model.typeId,
       addressId: model.addressId,
       scheduledAt: model.scheduledAt,
       status: CleaningRequestStatus.values[model.status],
@@ -52,6 +61,7 @@ class CleaningMapper {
     return db.CleaningRequestsCompanion(
       id: entity.id != null ? Value(entity.id!) : const Value.absent(),
       serviceId: Value(entity.serviceId),
+      typeId: Value(entity.typeId),
       addressId: Value(entity.addressId),
       scheduledAt: Value(entity.scheduledAt),
       status: Value(entity.status.index),
@@ -68,8 +78,18 @@ class CleaningMapper {
       id: model.id,
       name: model.name,
       description: model.description,
+      types: model.types.map(typeFromTypeModel).toList(),
+    );
+  }
+
+  static CleaningType typeFromTypeModel(CleaningTypeModel model) {
+    return CleaningType(
+      id: model.id,
+      name: model.name,
+      description: model.description,
       price: model.price,
       duration: model.duration,
+      isPopular: model.isPopular,
     );
   }
 
@@ -85,6 +105,7 @@ class CleaningMapper {
     return CleaningRequest(
       id: model.id,
       serviceId: model.serviceId,
+      typeId: model.typeId,
       addressId: model.addressId,
       scheduledAt: model.scheduledAt,
       status: CleaningRequestStatus.values[model.status],
@@ -96,6 +117,7 @@ class CleaningMapper {
     return CleaningRequestModel(
       id: entity.id,
       serviceId: entity.serviceId,
+      typeId: entity.typeId,
       addressId: entity.addressId,
       scheduledAt: entity.scheduledAt,
       status: entity.status.index,

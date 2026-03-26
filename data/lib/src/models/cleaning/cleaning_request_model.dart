@@ -1,22 +1,7 @@
-class CleaningServiceModel {
-  final int id;
-  final String name;
-  final String description;
-  final double price;
-  final String duration;
-
-  const CleaningServiceModel({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.duration,
-  });
-}
-
 class CleaningRequestModel {
   final int? id;
   final int serviceId;
+  final int typeId;
   final int addressId;
   final DateTime scheduledAt;
   final int status;
@@ -27,6 +12,7 @@ class CleaningRequestModel {
   const CleaningRequestModel({
     this.id,
     required this.serviceId,
+    required this.typeId,
     required this.addressId,
     required this.scheduledAt,
     required this.status,

@@ -25,6 +25,7 @@ class CleanerInfo extends Equatable {
 class CleaningRequest extends Equatable {
   final int? id;
   final int serviceId;
+  final int typeId;
   final int addressId;
   final DateTime scheduledAt;
   final CleaningRequestStatus status;
@@ -33,6 +34,7 @@ class CleaningRequest extends Equatable {
   const CleaningRequest({
     this.id,
     required this.serviceId,
+    required this.typeId,
     required this.addressId,
     required this.scheduledAt,
     required this.status,
@@ -42,6 +44,7 @@ class CleaningRequest extends Equatable {
   CleaningRequest copyWith({
     int? id,
     int? serviceId,
+    int? typeId,
     int? addressId,
     DateTime? scheduledAt,
     CleaningRequestStatus? status,
@@ -50,6 +53,7 @@ class CleaningRequest extends Equatable {
     return CleaningRequest(
       id: id ?? this.id,
       serviceId: serviceId ?? this.serviceId,
+      typeId: typeId ?? this.typeId,
       addressId: addressId ?? this.addressId,
       scheduledAt: scheduledAt ?? this.scheduledAt,
       status: status ?? this.status,
@@ -59,13 +63,14 @@ class CleaningRequest extends Equatable {
 
   @override
   String toString() {
-    return 'CleaningRequest(id: $id, serviceId: $serviceId, addressId: $addressId, scheduledAt: $scheduledAt, status: $status, assignedCleaner: $assignedCleaner)';
+    return 'CleaningRequest(id: $id, serviceId: $serviceId, typeId: $typeId, addressId: $addressId, scheduledAt: $scheduledAt, status: $status, assignedCleaner: $assignedCleaner)';
   }
 
   @override
   List<Object?> get props => [
         id,
         serviceId,
+        typeId,
         addressId,
         scheduledAt,
         status,

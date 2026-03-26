@@ -29,6 +29,9 @@ class FakeApiProvider implements ApiProvider {
 
     final sessionId = _faker.guid.guid();
 
+    // Deactivate all other sessions first
+    await (_db.update(_db.users)).write(const UsersCompanion(isSessionActive: Value(false)));
+
     await (_db.update(_db.users)..where((t) => t.id.equals(user.id))).write(
       UsersCompanion(
         sessionId: Value(sessionId),
@@ -61,6 +64,9 @@ class FakeApiProvider implements ApiProvider {
 
     final sessionId = _faker.guid.guid();
 
+    // Deactivate all other sessions first
+    await (_db.update(_db.users)).write(const UsersCompanion(isSessionActive: Value(false)));
+
     final id = await _db.into(_db.users).insert(
           UsersCompanion.insert(
             name: request.name,
@@ -85,13 +91,18 @@ class FakeApiProvider implements ApiProvider {
 
   @override
   Future<bool> checkSession() async {
-    if (_currentUserId == null) return false;
+    // Safely look for any active session
+    final activeUsers = await (_db.select(_db.users)
+          ..where((t) => t.isSessionActive.equals(true)))
+        .get();
 
-    final user = await (_db.select(_db.users)
-          ..where((t) => t.id.equals(_currentUserId!)))
-        .getSingleOrNull();
+    if (activeUsers.isNotEmpty) {
+      final activeUser = activeUsers.first;
+      _currentUserId = activeUser.id;
+      return true;
+    }
 
-    return user?.isSessionActive ?? false;
+    return false;
   }
 
   @override
@@ -110,9 +121,8 @@ class FakeApiProvider implements ApiProvider {
 
   @override
   Future<List<AddressModel>> getAddresses(int userId) async {
-    final result = await (_db.select(_db.addresses)
-          ..where((t) => t.userId.equals(userId)))
-        .get();
+    await _ensureAddressesExist(userId);
+    final result = await (_db.select(_db.addresses)..where((t) => t.userId.equals(userId))).get();
     return result.map(AddressMapper.fromDriftToDto).toList();
   }
 
@@ -169,51 +179,151 @@ class FakeApiProvider implements ApiProvider {
         .write(const AddressesCompanion(isDefault: Value(true)));
   }
 
+  Future<void> _ensureAddressesExist(int userId) async {
+    final existing = await (_db.select(_db.addresses)..where((t) => t.userId.equals(userId))).get();
+    if (existing.isEmpty) {
+      await _db.into(_db.addresses).insert(AddressesCompanion.insert(
+            userId: userId,
+            street: 'Al Mansour, Baghdad',
+            propertyType: 1, // Apartment
+            propertySize: 1, // Medium
+            isDefault: const Value(true),
+          ));
+      await _db.into(_db.addresses).insert(AddressesCompanion.insert(
+            userId: userId,
+            street: 'Karrada, Baghdad',
+            propertyType: 0, // Villa
+            propertySize: 2, // Large
+            isDefault: const Value(false),
+          ));
+    }
+  }
+
   Future<void> _ensureServicesExist() async {
     final existing = await _db.select(_db.cleaningServices).get();
     if (existing.isEmpty) {
-      final services = [
-        CleaningServicesCompanion.insert(
-          name: 'Regular Cleaning',
-          description: 'Standard house cleaning for everyday maintenance.',
-          price: 50.0,
-          duration: '2h',
-        ),
-        CleaningServicesCompanion.insert(
-          name: 'Deep Cleaning',
-          description:
-              'Thorough cleaning for hard-to-reach places and stubborn dirt.',
-          price: 100.0,
-          duration: '4h',
-        ),
-        CleaningServicesCompanion.insert(
-          name: 'Post-Construction Cleaning',
-          description:
-              'Intense cleaning after renovation or construction work.',
-          price: 200.0,
-          duration: '6h',
-        ),
-      ];
+      // 1. Home Cleaning
+      final homeId = await _db.into(_db.cleaningServices).insert(
+            CleaningServicesCompanion.insert(
+              name: 'Home Cleaning',
+              description: 'Professional cleaning for your house or apartment.',
+            ),
+          );
 
-      for (final service in services) {
-        await _db.into(_db.cleaningServices).insert(service);
-      }
+      await _db.batch((b) => b.insertAll(_db.cleaningTypes, [
+        CleaningTypesCompanion.insert(
+          serviceId: homeId,
+          name: 'Standard',
+          description: 'Regular maintenance cleaning.',
+          price: 45000.0,
+          duration: '2-3 hours',
+          isPopular: const Value(true),
+        ),
+        CleaningTypesCompanion.insert(
+          serviceId: homeId,
+          name: 'Deep Cleaning',
+          description: 'Complete home deep cleaning with all areas covered.',
+          price: 75000.0,
+          duration: '4-5 hours',
+          isPopular: const Value(false),
+        ),
+        CleaningTypesCompanion.insert(
+          serviceId: homeId,
+          name: 'Eco Cleaning',
+          description: 'Using only environmentally friendly materials.',
+          price: 55000.0,
+          duration: '2-3 hours',
+          isPopular: const Value(false),
+        ),
+        CleaningTypesCompanion.insert(
+          serviceId: homeId,
+          name: 'Pet-Friendly',
+          description: 'Special attention to pet hair and allergens.',
+          price: 50000.0,
+          duration: '3-4 hours',
+          isPopular: const Value(false),
+        ),
+      ]));
+
+      // 2. Window Cleaning
+      final windowId = await _db.into(_db.cleaningServices).insert(
+            CleaningServicesCompanion.insert(
+              name: 'Window Cleaning',
+              description: 'Crystal clear finish for your windows and mirrors.',
+            ),
+          );
+
+      await _db.batch((b) => b.insertAll(_db.cleaningTypes, [
+        CleaningTypesCompanion.insert(
+          serviceId: windowId,
+          name: 'Regular Windows',
+          description: 'Cleaning of standard window panes.',
+          price: 15000.0,
+          duration: '1-2 hours',
+          isPopular: const Value(true),
+        ),
+        CleaningTypesCompanion.insert(
+          serviceId: windowId,
+          name: 'High Rise',
+          description: 'Specialized cleaning for windows above 2nd floor.',
+          price: 45000.0,
+          duration: '2-4 hours',
+          isPopular: const Value(false),
+        ),
+      ]));
+
+      // 3. Specialized
+      final specId = await _db.into(_db.cleaningServices).insert(
+            CleaningServicesCompanion.insert(
+              name: 'Specialized Cleaning',
+              description: 'Heavy duty or specific material cleaning.',
+            ),
+          );
+
+      await _db.batch((b) => b.insertAll(_db.cleaningTypes, [
+        CleaningTypesCompanion.insert(
+          serviceId: specId,
+          name: 'Post-Construction',
+          description: 'Heavy duty cleaning after renovation.',
+          price: 120000.0,
+          duration: '6-8 hours',
+          isPopular: const Value(false),
+        ),
+        CleaningTypesCompanion.insert(
+          serviceId: specId,
+          name: 'Carpet Cleaning',
+          description: 'Professional steam cleaning for all carpets.',
+          price: 35000.0,
+          duration: '1-2 hours',
+          isPopular: const Value(true),
+        ),
+      ]));
     }
   }
 
   @override
   Future<List<CleaningServiceModel>> getCleaningServices() async {
     await _ensureServicesExist();
-    final result = await _db.select(_db.cleaningServices).get();
-    return result
-        .map((s) => CleaningServiceModel(
-              id: s.id,
-              name: s.name,
-              description: s.description,
-              price: s.price,
-              duration: s.duration,
-            ))
-        .toList();
+    final services = await _db.select(_db.cleaningServices).get();
+    
+    final List<CleaningServiceModel> result = [];
+    for (final s in services) {
+      final types = await (_db.select(_db.cleaningTypes)..where((t) => t.serviceId.equals(s.id))).get();
+      result.add(CleaningServiceModel(
+        id: s.id,
+        name: s.name,
+        description: s.description,
+        types: types.map((t) => CleaningTypeModel(
+          id: t.id,
+          name: t.name,
+          description: t.description,
+          price: t.price,
+          duration: t.duration,
+          isPopular: t.isPopular,
+        )).toList(),
+      ));
+    }
+    return result;
   }
 
   @override
@@ -247,6 +357,7 @@ class FakeApiProvider implements ApiProvider {
           CleaningRequestsCompanion.insert(
             userId: _currentUserId ?? 1,
             serviceId: request.serviceId,
+            typeId: request.typeId,
             addressId: request.addressId,
             scheduledAt: request.scheduledAt,
             status: request.status,
@@ -276,6 +387,7 @@ class FakeApiProvider implements ApiProvider {
     return CleaningRequestModel(
       id: r.id,
       serviceId: r.serviceId,
+      typeId: r.typeId,
       addressId: r.addressId,
       scheduledAt: r.scheduledAt,
       status: r.status,

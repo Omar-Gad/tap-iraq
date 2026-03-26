@@ -1,69 +1,107 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:domain/domain.dart';
 import 'cleaning_state.dart';
 
 class CleaningCubit extends Cubit<CleaningState> {
   final GetCleaningServicesUseCase _getServices;
-  final GetCleaningRequestsUseCase _getRequests;
+  final GetAddressesUseCase _getAddresses;
   final CreateCleaningRequestUseCase _createRequest;
-  final CancelCleaningRequestUseCase _cancelRequest;
 
   CleaningCubit({
     required GetCleaningServicesUseCase getServices,
-    required GetCleaningRequestsUseCase getRequests,
+    required GetAddressesUseCase getAddresses,
     required CreateCleaningRequestUseCase createRequest,
     required CancelCleaningRequestUseCase cancelRequest,
   })  : _getServices = getServices,
-        _getRequests = getRequests,
+        _getAddresses = getAddresses,
         _createRequest = createRequest,
-        _cancelRequest = cancelRequest,
         super(CleaningInitial());
 
-  Future<void> fetchCleaningData() async {
+  Future<void> fetchBookingData(int userId) async {
     emit(CleaningLoading());
     try {
       final services = await _getServices.execute(const NoParams());
-      final requests = await _getRequests.execute(const NoParams());
-      emit(CleaningLoaded(services: services, requests: requests));
-    } catch (e) {
-      emit(CleaningError(e.toString()));
-    }
-  }
+      final addresses = await _getAddresses.execute(userId);
+      
+      UserAddress? defaultAddress;
+      try {
+        defaultAddress = addresses.firstWhere((a) => a.isDefault);
+      } catch (_) {
+        if (addresses.isNotEmpty) defaultAddress = addresses.first;
+      }
 
-  Future<void> createRequest(CleaningRequest request) async {
-    if (state is! CleaningLoaded) return;
-    final currentState = state as CleaningLoaded;
-
-    try {
-      final newRequest = await _createRequest.execute(request);
-      emit(currentState.copyWith(
-        requests: [newRequest, ...currentState.requests],
+      emit(CleaningLoaded(
+        services: services,
+        addresses: addresses,
+        selectedAddress: defaultAddress,
       ));
     } catch (e) {
       emit(CleaningError(e.toString()));
     }
   }
 
-  Future<void> cancelRequest(int requestId) async {
+  void selectService(CleaningService service) {
     if (state is! CleaningLoaded) return;
-    final currentState = state as CleaningLoaded;
+    emit((state as CleaningLoaded).copyWith(
+      selectedService: service,
+      clearType: true,
+    ));
+  }
+
+  void selectType(CleaningType type) {
+    if (state is! CleaningLoaded) return;
+    emit((state as CleaningLoaded).copyWith(selectedType: type));
+  }
+
+  void selectAddress(UserAddress address) {
+    if (state is! CleaningLoaded) return;
+    emit((state as CleaningLoaded).copyWith(selectedAddress: address));
+  }
+
+  void selectDate(DateTime date) {
+    if (state is! CleaningLoaded) return;
+    emit((state as CleaningLoaded).copyWith(selectedDate: date));
+  }
+
+  void selectTime(TimeOfDay time) {
+    if (state is! CleaningLoaded) return;
+    emit((state as CleaningLoaded).copyWith(selectedTime: time));
+  }
+
+  Future<void> placeOrder() async {
+    if (state is! CleaningLoaded) return;
+    final s = state as CleaningLoaded;
+
+    if (s.selectedService == null || s.selectedType == null || s.selectedAddress == null || s.selectedDate == null || s.selectedTime == null) {
+      emit(const CleaningError('Please select all required booking options.'));
+      // Restore state after error? No, let UI handle error display
+      return;
+    }
+
+    final scheduledAt = DateTime(
+      s.selectedDate!.year,
+      s.selectedDate!.month,
+      s.selectedDate!.day,
+      s.selectedTime!.hour,
+      s.selectedTime!.minute,
+    );
 
     try {
-      await _cancelRequest.execute(requestId);
-      final updatedRequests = currentState.requests.map((r) {
-        if (r.id == requestId) {
-          return CleaningRequest(
-            id: r.id,
-            serviceId: r.serviceId,
-            addressId: r.addressId,
-            scheduledAt: r.scheduledAt,
-            status: CleaningRequestStatus.canceled,
-            assignedCleaner: r.assignedCleaner,
-          );
-        }
-        return r;
-      }).toList();
-      emit(currentState.copyWith(requests: updatedRequests));
+      final request = CleaningRequest(
+        serviceId: s.selectedService!.id,
+        typeId: s.selectedType!.id,
+        addressId: s.selectedAddress!.id!,
+        scheduledAt: scheduledAt,
+        status: CleaningRequestStatus.scheduled,
+      );
+      
+      await _createRequest.execute(request);
+      
+      // Navigate or show success? For now, re-emit loaded with success?
+      // Actually, I'll just re-load for simplicity in this mock
+      emit(CleaningInitial());
+      await fetchBookingData(s.selectedAddress!.userId);
     } catch (e) {
       emit(CleaningError(e.toString()));
     }

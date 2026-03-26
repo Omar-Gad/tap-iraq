@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core/core.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navigation/navigation.dart';
 import '../bloc/cleaning_cubit.dart';
 import '../bloc/cleaning_state.dart';
 
@@ -14,40 +16,49 @@ class CleaningScreen extends StatelessWidget {
     return BlocProvider<CleaningCubit>(
       create: (context) => CleaningCubit(
         getServices: appLocator<GetCleaningServicesUseCase>(),
-        getRequests: appLocator<GetCleaningRequestsUseCase>(),
+        getAddresses: appLocator<GetAddressesUseCase>(),
         createRequest: appLocator<CreateCleaningRequestUseCase>(),
         cancelRequest: appLocator<CancelCleaningRequestUseCase>(),
-      )..fetchCleaningData(),
+      )..fetchBookingData(1),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Cleaning Services'),
+          title: const Text('Select Cleaning Service'),
         ),
         body: BlocBuilder<CleaningCubit, CleaningState>(
           builder: (context, state) {
             if (state is CleaningLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is CleaningLoaded) {
-              if (state.services.isEmpty) {
-                return const Center(child: Text('No services available'));
-              }
+            }
+
+            if (state is CleaningLoaded) {
               return ListView.builder(
                 itemCount: state.services.length,
                 itemBuilder: (context, index) {
                   final service = state.services[index];
+                  double minPrice = 0;
+                  if (service.types.isNotEmpty) {
+                    minPrice = service.types.map((t) => t.price).reduce((a, b) => a < b ? a : b);
+                  }
+
                   return ListTile(
                     title: Text(service.name),
-                    subtitle: Text('${service.price} QAR - ${service.duration}'),
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    subtitle: Text(service.description),
+                    trailing: minPrice > 0 ? Text('From IQD ${minPrice.toInt()}') : null,
                     onTap: () {
-                      // Navigate to service detail or booking
+                      context.router.push(
+                        CleaningBookingRoute(serviceId: service.id),
+                      );
                     },
                   );
                 },
               );
-            } else if (state is CleaningError) {
-              return Center(child: Text('Error: ${state.message}'));
             }
-            return const Center(child: Text('Initial state'));
+
+            if (state is CleaningError) {
+              return Center(child: Text(state.message));
+            }
+
+            return const SizedBox.shrink();
           },
         ),
       ),

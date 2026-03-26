@@ -1,23 +1,18 @@
-import 'package:core/core.dart';
-
-class CleaningService extends Equatable {
+class CleaningServiceModel {
   final int id;
   final String name;
   final String description;
-  final List<CleaningType> types;
+  final List<CleaningTypeModel> types;
 
-  const CleaningService({
+  const CleaningServiceModel({
     required this.id,
     required this.name,
     required this.description,
     required this.types,
   });
-
-  @override
-  List<Object?> get props => [id, name, description, types];
 }
 
-class CleaningType extends Equatable {
+class CleaningTypeModel {
   final int id;
   final String name;
   final String description;
@@ -25,7 +20,7 @@ class CleaningType extends Equatable {
   final String duration;
   final bool isPopular;
 
-  const CleaningType({
+  const CleaningTypeModel({
     required this.id,
     required this.name,
     required this.description,
@@ -33,7 +28,4 @@ class CleaningType extends Equatable {
     required this.duration,
     this.isPopular = false,
   });
-
-  @override
-  List<Object?> get props => [id, name, description, price, duration, isPopular];
 }

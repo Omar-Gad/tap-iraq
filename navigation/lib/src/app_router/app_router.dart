@@ -24,5 +24,9 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: SettingsRoute.page, path: 'settings'),
       ],
     ),
+    AutoRoute(
+      page: CleaningBookingRoute.page,
+      path: '/booking/:serviceId',
+    ),
   ];
 }
