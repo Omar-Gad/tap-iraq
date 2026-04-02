@@ -14,6 +14,8 @@ abstract class AppColors {
   MaterialColor get neutral;
   Color get white;
   Color get black;
+  Color get gold;
+  Color get red;
 }
 
 class DarkColors extends LightColors {
@@ -33,13 +35,19 @@ class LightColors implements AppColors {
   MaterialColor get tertiary => _buildMaterialColor(const Color(0xFF4A9B8E));
 
   @override
-  MaterialColor get neutral => _buildMaterialColor(const Color(0xFFF5F5F5));
+  MaterialColor get neutral => _buildMaterialColor(const Color(0xFFF4F5F7));
 
   @override
-  Color get white => const Color(0xFFFFFFFF);
+  Color get white => const Color(0xFFF9F9F9);
 
   @override
   Color get black => const Color(0xFF000000);
+
+  @override
+  Color get gold => const Color(0xFFD4A574);
+
+  @override
+  Color get red => const Color(0xFFBA1A1A);
 }
 
 MaterialColor _buildMaterialColor(Color color) {
@@ -54,6 +62,7 @@ MaterialColor _buildMaterialColor(Color color) {
     700: _shadeColor(color, 0.2),
     800: _shadeColor(color, 0.3),
     900: _shadeColor(color, 0.4),
+    1000: _shadeColor(color, 0.5),
   };
   return MaterialColor(color.value, colorMap);
 }

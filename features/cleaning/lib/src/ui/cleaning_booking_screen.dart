@@ -26,6 +26,8 @@ class CleaningBookingScreen extends StatelessWidget {
         cancelRequest: appLocator<CancelCleaningRequestUseCase>(),
       )..fetchBookingData(1), // Mocking user 1
       child: Scaffold(
+
+
         appBar: AppBar(
           title: const Text('Booking'),
         ),
@@ -38,7 +40,6 @@ class CleaningBookingScreen extends StatelessWidget {
                 }
 
                 if (cleaningState is CleaningLoaded) {
-                  // If no selection yet, auto-select based on serviceId
                   if (cleaningState.selectedService == null) {
                     final initialService = cleaningState.services.firstWhere(
                       (s) => s.id == serviceId,
@@ -89,7 +90,7 @@ class CleaningBookingScreen extends StatelessWidget {
                               const SizedBox(height: 12),
                               Text(currentType.description, style: const TextStyle(color: Colors.grey, fontSize: 13)),
                             ],
-                          ], // Added missing closing bracket covering the whole currentService section
+                          ],
                           const Divider(height: 32),
                           const Text('Service Location', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                           const SizedBox(height: 12),

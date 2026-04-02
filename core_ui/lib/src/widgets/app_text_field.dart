@@ -38,11 +38,11 @@ class AppTextField extends StatelessWidget {
       children: <Widget>[
         Text(
           label,
-          style: AppFonts.semiBold16.copyWith(
-            color: colors.primary[900],
+          style: AppFonts.bold20.copyWith(
+            color: colors.primary[500],
           ),
         ),
-        const SizedBox(height: AppDimens.padding8),
+        const SizedBox(height: 6),
         TextFormField(
           controller: controller,
           obscureText: obscureText,
@@ -50,51 +50,14 @@ class AppTextField extends StatelessWidget {
           textInputAction: textInputAction,
           validator: validator,
           onChanged: onChanged,
-          style: AppFonts.medium14.copyWith(
-            color: colors.primary[900],
+          style: AppFonts.normal16.copyWith(
+            color: colors.primary[500],
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: AppFonts.normal14.copyWith(
-              color: colors.neutral[400],
-            ),
-            filled: true,
-            fillColor: colors.neutral[100],
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppDimens.padding16,
-              vertical: AppDimens.padding16,
-            ),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: BorderSide(
-                color: colors.primary[500]!,
-                width: 1.5,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 1.5,
-              ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 1.5,
-              ),
-            ),
+            errorStyle: const TextStyle(fontSize: 12, height: 1),
           ),
         ),
       ],

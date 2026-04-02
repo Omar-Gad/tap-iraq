@@ -1,12 +1,9 @@
+import 'package:core/core.dart';
+import 'package:core_ui/core_ui.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
-
 import 'package:auto_route/auto_route.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:home/home.dart';
-import 'package:core/core.dart';
-import 'package:domain/domain.dart';
 
 class App extends StatelessWidget {
   final AppRouter appRouter;
@@ -29,10 +26,14 @@ class App extends StatelessWidget {
             updateAddressUseCase: appLocator<UpdateAddressUseCase>(),
             deleteAddressUseCase: appLocator<DeleteAddressUseCase>(),
             setDefaultAddressUseCase: appLocator<SetDefaultAddressUseCase>(),
-          )..fetchAddresses(1), // Mock user ID 1
+          ),
         ),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('en'),
+        theme: lightTheme,
         debugShowCheckedModeBanner: false,
         routerConfig: appRouter.config(
           deepLinkBuilder: (deepLink) {

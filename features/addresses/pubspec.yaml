@@ -1,0 +1,35 @@
+name: addresses
+description: addresses feature module
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core:
+    path: ../../core
+  core_ui:
+    path: ../../core_ui
+  domain:
+    path: ../../domain
+  navigation:
+    path: ../../navigation
+  home:
+    path: ../../features/home
+  auto_route: ^7.8.4
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.8
+  auto_route_generator: ^7.3.2
+
+flutter:
+  uses-material-design: true

@@ -7,14 +7,17 @@ class RegisterRequest {
   final String name;
   final String login;
   final String password;
+  final String phone;
   final String db;
 
   RegisterRequest({
     required this.name,
     required this.login,
     required this.password,
+    required this.phone,
     this.db = 'cleaning_prod',
   });
+
 
   factory RegisterRequest.fromJson(Map<String, dynamic> json) =>
       _$RegisterRequestFromJson(json);

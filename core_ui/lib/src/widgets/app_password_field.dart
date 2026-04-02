@@ -13,8 +13,8 @@ class AppPasswordField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
 
   const AppPasswordField({
-    this.label = 'Password',
-    this.hintText = 'Create a secure password',
+    required this.label,
+    required this.hintText,
     this.validator,
     this.controller,
     this.forgotPasswordText,
@@ -44,8 +44,8 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
           children: [
             Text(
               widget.label,
-              style: AppFonts.semiBold16.copyWith(
-                color: colors.primary[900],
+              style: AppFonts.bold20.copyWith(
+                color: colors.primary[500],
               ),
             ),
             if (widget.forgotPasswordText != null && widget.onForgotTap != null)
@@ -54,19 +54,19 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
                 behavior: HitTestBehavior.opaque,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    vertical: AppDimens.padding4,
+                    vertical: 4.0,
                   ),
                   child: Text(
                     widget.forgotPasswordText!,
-                    style: AppFonts.normal14.copyWith(
-                      color: colors.secondary[600],
+                    style: AppFonts.normal16.copyWith(
+                      color: colors.secondary[500],
                     ),
                   ),
                 ),
               ),
           ],
         ),
-        const SizedBox(height: AppDimens.padding8),
+        const SizedBox(height: 6.0),
         TextFormField(
           controller: widget.controller,
           obscureText: _obscureText,
@@ -75,25 +75,17 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
           validator: widget.validator,
           onChanged: widget.onChanged,
           style: AppFonts.medium14.copyWith(
-            color: colors.primary[900],
+            color: colors.primary[500],
           ),
           decoration: InputDecoration(
             hintText: widget.hintText,
-            hintStyle: AppFonts.normal14.copyWith(
-              color: colors.neutral[400],
-            ),
-            filled: true,
-            fillColor: colors.neutral[100],
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppDimens.padding16,
-              vertical: AppDimens.padding16,
-            ),
+            errorStyle: const TextStyle(fontSize: 12, height: 1),
             suffixIcon: IconButton(
               icon: Icon(
                 _obscureText
                     ? Icons.remove_red_eye_rounded
                     : Icons.visibility_off_rounded,
-                color: colors.neutral[400],
+                color: colors.primary[500]!.withOpacity(0.4),
               ),
               onPressed: () {
                 setState(() {
@@ -101,37 +93,9 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
                 });
               },
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: BorderSide(
-                color: colors.primary[500]!,
-                width: 1.5,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 1.5,
-              ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppDimens.borderRadius12),
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 1.5,
-              ),
-            ),
           ),
         ),
+
       ],
     );
   }

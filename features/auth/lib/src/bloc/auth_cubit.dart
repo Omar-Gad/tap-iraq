@@ -11,29 +11,77 @@ class AuthCubit extends Cubit<AuthState> {
     required RegisterUseCase registerUseCase,
   })  : _loginUseCase = loginUseCase,
         _registerUseCase = registerUseCase,
-        super(AuthInitial());
+        super(const AuthInitial());
 
-  Future<void> login(String login, String password) async {
-    emit(AuthLoading());
+  void switchStep(AuthStep step) {
+    emit(AuthInitial(
+      step: step,
+      email: state.email,
+      password: state.password,
+    ));
+  }
+
+  void saveCredentials(String email, String password) {
+    emit(AuthInitial(
+      step: AuthStep.userRegister,
+      email: email,
+      password: password,
+    ));
+  }
+
+  Future<void> login(String email, String password) async {
+    final currentStep = state.step;
+    emit(AuthLoading(step: currentStep));
     try {
       final user = await _loginUseCase.execute(
-        LoginParams(login: login, password: password),
+        LoginParams(login: email, password: password),
       );
-      emit(AuthSuccess(user));
+      emit(AuthSuccess(user, step: currentStep));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(e.toString(), step: currentStep));
     }
   }
 
-  Future<void> register(String name, String login, String password) async {
-    emit(AuthLoading());
+  Future<void> registerFinal({required String name, required String phone}) async {
+    final email = state.email;
+    final password = state.password;
+
+    if (email == null || password == null) {
+      emit(const AuthError('Missing registration data'));
+      return;
+    }
+
+    emit(AuthLoading(
+      step: state.step,
+      email: email,
+      password: password,
+    ));
+
     try {
       final user = await _registerUseCase.execute(
-        RegisterParams(name: name, login: login, password: password),
+        RegisterParams(
+          name: name,
+          login: email,
+          password: password,
+          phone: phone,
+        ),
       );
-      emit(AuthSuccess(user));
+
+      emit(AuthSuccess(
+        user,
+        step: state.step,
+        email: email,
+        password: password,
+      ));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(
+        e.toString(),
+        step: state.step,
+        email: email,
+        password: password,
+      ));
     }
   }
+
 }
+

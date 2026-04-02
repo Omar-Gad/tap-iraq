@@ -28,7 +28,7 @@ class AppButton extends StatelessWidget {
     this.color,
     this.borderRadius,
     this.padding = const EdgeInsets.symmetric(
-      vertical: AppDimens.padding10,
+      vertical: AppDimens.padding20,
     ),
     this.isLoading = false,
     this.isExpanded = true,
@@ -53,15 +53,15 @@ class AppButton extends StatelessWidget {
                 ? (color != null
                     ? null
                     : LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                         colors: [
-                          colors.tertiary[400]!,
+                          colors.tertiary[500]!,
                           colors.tertiary[600]!,
                         ],
                       ))
                 : null,
-            color: isActive ? color : colors.neutral[300],
+            color: isActive ? color : colors.neutral[600],
             boxShadow: isActive
                 ? [
                     BoxShadow(
@@ -148,16 +148,16 @@ class _Content extends StatelessWidget {
         : Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              if (icon != null) ...<Widget>[
-                icon!,
-                const SizedBox(width: AppDimens.padding2),
-              ],
               Text(
                 submitText,
-                style: AppFonts.semiBold14.copyWith(
+                style: AppFonts.bold20.copyWith(
                   color: colors.white,
                 ),
               ),
+              if (icon != null) ...<Widget>[
+                const SizedBox(width: AppDimens.padding2),
+                icon!,
+              ],
             ],
           );
   }

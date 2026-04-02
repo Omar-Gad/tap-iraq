@@ -20,6 +20,8 @@ dependencies:
     path: ../features/cleaning
   core_ui:
     path: ../core_ui
+  addresses:
+    path: ../features/addresses
 dev_dependencies:
   flutter_test:
     sdk: flutter

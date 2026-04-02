@@ -10,8 +10,9 @@ class AddressMapper {
       id: model.id,
       userId: model.userId,
       street: model.street,
-      propertyType: PropertyType.values[model.propertyType],
-      propertySize: PropertySize.values[model.propertySize],
+      city: model.city,
+      zipCode: model.zipCode,
+      label: model.label,
       isDefault: model.isDefault,
     );
   }
@@ -22,8 +23,9 @@ class AddressMapper {
       id: model.uid,
       userId: model.userId,
       street: model.street,
-      propertyType: PropertyType.values[model.propertyType],
-      propertySize: PropertySize.values[model.propertySize],
+      city: model.city,
+      zipCode: model.zipCode,
+      label: model.label,
       isDefault: model.isDefault,
     );
   }
@@ -34,8 +36,9 @@ class AddressMapper {
       uid: entity.id ?? 0,
       userId: entity.userId,
       street: entity.street,
-      propertyType: entity.propertyType.index,
-      propertySize: entity.propertySize.index,
+      city: entity.city,
+      zipCode: entity.zipCode,
+      label: entity.label,
       isDefault: entity.isDefault,
     );
   }
@@ -46,8 +49,9 @@ class AddressMapper {
       id: entity.id != null ? Value(entity.id!) : const Value.absent(),
       userId: Value(entity.userId),
       street: Value(entity.street),
-      propertyType: Value(entity.propertyType.index),
-      propertySize: Value(entity.propertySize.index),
+      city: Value(entity.city),
+      zipCode: Value(entity.zipCode),
+      label: Value(entity.label),
       isDefault: Value(entity.isDefault),
     );
   }
@@ -58,8 +62,9 @@ class AddressMapper {
       uid: model.id,
       userId: model.userId,
       street: model.street,
-      propertyType: model.propertyType,
-      propertySize: model.propertySize,
+      city: model.city,
+      zipCode: model.zipCode,
+      label: model.label,
       isDefault: model.isDefault,
     );
   }

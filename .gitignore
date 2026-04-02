@@ -13,6 +13,7 @@ os_crash.log
 *.iml
 *.ipr
 *.iws
+**/build/
 
 **/doc/api/
 .dart_tool/
@@ -58,3 +59,9 @@ key.properties
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+.last_build_id
+.filecache
+gen_l10n_inputs_and_outputs.json
+gen_localizations.d
+gen_localizations.stamp
+outputs.json
