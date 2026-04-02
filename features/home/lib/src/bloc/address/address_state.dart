@@ -1,7 +1,7 @@
 import 'package:core/core.dart';
 import 'package:domain/domain.dart';
 
-abstract class AddressState extends Equatable {
+sealed class AddressState extends Equatable {
   const AddressState();
 
   @override

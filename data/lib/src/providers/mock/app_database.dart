@@ -8,6 +8,7 @@ class Users extends Table {
   TextColumn get name => text()();
   TextColumn get login => text().unique()();
   TextColumn get password => text()();
+  TextColumn get phone => text().withDefault(const Constant(''))();
   TextColumn get sessionId => text().withDefault(const Constant(''))();
   IntColumn get companyId => integer().withDefault(const Constant(1))();
   BoolColumn get isSessionActive =>
@@ -20,8 +21,9 @@ class Addresses extends Table {
   IntColumn get userId =>
       integer().references(Users, #id, onDelete: KeyAction.cascade)();
   TextColumn get street => text()();
-  IntColumn get propertyType => integer()();
-  IntColumn get propertySize => integer()();
+  TextColumn get city => text().withDefault(const Constant(''))();
+  TextColumn get zipCode => text().withDefault(const Constant(''))();
+  TextColumn get label => text().withDefault(const Constant(''))();
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
 }
 
@@ -75,7 +77,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -96,8 +98,20 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(cleaningTypes);
             await m.createTable(cleaningRequests);
           }
+          if (from < 6) {
+            await m.addColumn(users, users.phone);
+          }
+          if (from < 7) {
+            // Re-creating addresses table because of new non-nullable columns without defaults in existing rows
+            // In a mock DB, we can just delete it or add columns with literal defaults
+            await m.addColumn(addresses, addresses.city);
+            await m.addColumn(addresses, addresses.zipCode);
+            await m.addColumn(addresses, addresses.label);
+          }
         },
       );
+
+
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'tap_iraq_mock_db');

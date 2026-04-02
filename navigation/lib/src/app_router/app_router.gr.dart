@@ -8,6 +8,7 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:addresses/addresses.dart' as _i6;
 import 'package:auth/auth.dart' as _i2;
 import 'package:auto_route/auto_route.dart' as _i1;
 import 'package:cleaning/cleaning.dart' as _i4;
@@ -23,5 +24,6 @@ abstract class $AppRouter extends _i1.RootStackRouter {
     ..._i3.HomeModule().pagesMap,
     ..._i4.CleaningModule().pagesMap,
     ..._i5.CoreUIModule().pagesMap,
+    ..._i6.AddressesModule().pagesMap,
   };
 }

@@ -20,7 +20,26 @@ class AppFonts {
     fontSize: 11,
     fontFamily: _fontFamily,
   );
-
+  static TextStyle bold14 = const TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 14,
+    fontFamily: _fontFamily,
+  );
+  static TextStyle bold10 = const TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 10,
+    fontFamily: _fontFamily,
+  );
+  static TextStyle bold12 = const TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 12,
+    fontFamily: _fontFamily,
+  );
+  static TextStyle bold36 = const TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 36,
+    fontFamily: _fontFamily,
+  );
   static TextStyle normal13 = const TextStyle(
     fontWeight: FontWeight.w400,
     fontSize: 13,
@@ -67,6 +86,11 @@ class AppFonts {
     fontSize: 28,
     fontFamily: _fontFamily,
   );
+  static TextStyle bold56 = const TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 56,
+    fontFamily: _fontFamily,
+  );
   static TextStyle medium24 = const TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 24,
@@ -85,6 +109,11 @@ class AppFonts {
   static TextStyle bold24 = const TextStyle(
     fontWeight: FontWeight.w700,
     fontSize: 24,
+    fontFamily: _fontFamily,
+  );
+  static TextStyle bold32 = const TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 32,
     fontFamily: _fontFamily,
   );
   static TextStyle medium16 = const TextStyle(

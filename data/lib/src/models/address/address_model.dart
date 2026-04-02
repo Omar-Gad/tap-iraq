@@ -8,10 +8,9 @@ class AddressModel {
   @JsonKey(name: 'user_id')
   final int userId;
   final String street;
-  @JsonKey(name: 'property_type')
-  final int propertyType;
-  @JsonKey(name: 'property_size')
-  final int propertySize;
+  final String city;
+  final String zipCode;
+  final String label;
   @JsonKey(name: 'is_default')
   final bool isDefault;
 
@@ -19,8 +18,9 @@ class AddressModel {
     required this.uid,
     required this.userId,
     required this.street,
-    required this.propertyType,
-    required this.propertySize,
+    required this.city,
+    required this.zipCode,
+    required this.label,
     required this.isDefault,
   });
 

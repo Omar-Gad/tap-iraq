@@ -5,17 +5,17 @@ import '../../core_ui.dart';
 const LightColors _appColors = LightColors();
 
 final ThemeData lightTheme = ThemeData.light().copyWith(
-  scaffoldBackgroundColor: _appColors.neutral[50],
+  scaffoldBackgroundColor: _appColors.white,
   appBarTheme: _getAppBarTheme(),
   textTheme: _getTextTheme(),
   inputDecorationTheme: _getInputDecorationTheme(),
   primaryColor: _appColors.primary[500],
-  disabledColor: _appColors.neutral[300],
+  disabledColor: _appColors.neutral[500],
   colorScheme: ColorScheme.light(
     primary: _appColors.primary[500]!,
     secondary: _appColors.secondary[500]!,
     tertiary: _appColors.tertiary[500]!,
-    surface: _appColors.neutral[50]!,
+    surface: _appColors.white,
   ),
 );
 
@@ -24,61 +24,62 @@ TextTheme _getTextTheme() {
     titleMedium: AppFonts.normal13,
     bodyMedium: AppFonts.normal13,
   ).apply(
-    bodyColor: _appColors.primary[900],
-    displayColor: _appColors.primary[900],
+    bodyColor: _appColors.primary[500],
+    displayColor: _appColors.primary[500],
   );
 }
 
 InputDecorationTheme _getInputDecorationTheme() {
   return InputDecorationTheme(
-    hintStyle: AppFonts.normal13.copyWith(color: _appColors.neutral[400]),
+    isDense: true,
     filled: true,
-    fillColor: _appColors.neutral[100],
-    border: OutlineInputBorder(
-      borderRadius: const BorderRadius.all(
-        Radius.circular(AppDimens.borderRadius12),
-      ),
-      borderSide: BorderSide(
-        color: _appColors.neutral[300]!,
-      ),
+    fillColor: _appColors.neutral[500],
+    hintStyle: AppFonts.normal14.copyWith(
+      color: _appColors.primary[500]!.withOpacity(0.4),
     ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: const BorderRadius.all(
-        Radius.circular(AppDimens.borderRadius12),
-      ),
-      borderSide: BorderSide(
-        color: _appColors.neutral[300]!,
-      ),
+    contentPadding: const EdgeInsets.symmetric(
+      horizontal: 16.0,
+      vertical: 18.0,
+    ),
+    border: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+      borderSide: BorderSide.none,
+    ),
+    enabledBorder: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+      borderSide: BorderSide.none,
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: const BorderRadius.all(
-        Radius.circular(AppDimens.borderRadius12),
-      ),
+      borderRadius: const BorderRadius.all(Radius.circular(12)),
       borderSide: BorderSide(
-        color: _appColors.primary[500]!,
-        width: 2,
+        color: _appColors.tertiary[500]!,
+        width: 1.5,
       ),
     ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: const BorderRadius.all(
-        Radius.circular(AppDimens.borderRadius12),
-      ),
-      borderSide: const BorderSide(
+    errorBorder: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+      borderSide: BorderSide(
         color: Colors.red,
-        width: 2,
+        width: 1.5,
       ),
     ),
-    labelStyle: AppFonts.normal13.copyWith(color: _appColors.primary[600]),
+    focusedErrorBorder: const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+      borderSide: BorderSide(
+        color: Colors.red,
+        width: 1.5,
+      ),
+    ),
   );
 }
 
 AppBarTheme _getAppBarTheme() {
   return AppBarTheme(
-    backgroundColor: _appColors.neutral[50],
+    backgroundColor: _appColors.white,
     elevation: 0,
-    iconTheme: IconThemeData(color: _appColors.primary[900]),
+    iconTheme: IconThemeData(color: _appColors.primary[500]),
     titleTextStyle: AppFonts.normal18.copyWith(
-      color: _appColors.primary[900],
+      color: _appColors.primary[500],
       fontWeight: FontWeight.bold,
     ),
     centerTitle: true,

@@ -1,48 +1,41 @@
 import 'package:core/core.dart';
 
-enum PropertyType {
-  villa,
-  apartment,
-}
-
-enum PropertySize {
-  small,
-  medium,
-  large,
-}
-
 class UserAddress extends Equatable {
   final int? id;
   final int userId;
+  final String label;
   final String street;
-  final PropertyType propertyType;
-  final PropertySize propertySize;
+  final String city;
+  final String zipCode;
   final bool isDefault;
 
   const UserAddress({
     this.id,
     required this.userId,
     required this.street,
-    required this.propertyType,
-    required this.propertySize,
     required this.isDefault,
+    required this.city,
+    required this.label,
+    required this.zipCode,
   });
 
   UserAddress copyWith({
     int? id,
     int? userId,
     String? street,
-    PropertyType? propertyType,
-    PropertySize? propertySize,
     bool? isDefault,
+    String? city,
+    String? label,
+    String? zipCode,
   }) {
     return UserAddress(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       street: street ?? this.street,
-      propertyType: propertyType ?? this.propertyType,
-      propertySize: propertySize ?? this.propertySize,
       isDefault: isDefault ?? this.isDefault,
+      city: city ?? this.city,
+      label: label ?? this.label,
+      zipCode: zipCode ?? this.zipCode,
     );
   }
 
@@ -50,9 +43,10 @@ class UserAddress extends Equatable {
     return {
       'id': id,
       'userId': userId,
+      'label': label,
       'street': street,
-      'propertyType': propertyType.index,
-      'propertySize': propertySize.index,
+      'city': city,
+      'zipCode': zipCode,
       'isDefault': isDefault,
     };
   }
@@ -61,25 +55,28 @@ class UserAddress extends Equatable {
     return UserAddress(
       id: map['id'] as int?,
       userId: map['userId'] as int,
+      label: map['label'] as String,
       street: map['street'] as String,
-      propertyType: PropertyType.values[map['propertyType'] as int],
-      propertySize: PropertySize.values[map['propertySize'] as int],
+      city: map['city'] as String,
+      zipCode: map['zipCode'] as String,
       isDefault: map['isDefault'] as bool,
     );
   }
 
   @override
   String toString() {
-    return 'UserAddress(id: $id, userId: $userId, street: $street, propertyType: $propertyType, propertySize: $propertySize, isDefault: $isDefault)';
+    return 'UserAddress(id: $id, userId: $userId, label: $label, street: $street, city: $city, zipCode: $zipCode, isDefault: $isDefault)';
   }
+
 
   @override
   List<Object?> get props => [
         id,
         userId,
         street,
-        propertyType,
-        propertySize,
         isDefault,
+        city,
+        label,
+        zipCode,
       ];
 }

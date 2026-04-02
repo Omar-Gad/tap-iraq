@@ -7,6 +7,7 @@ class RegisterMapper {
       name: params.name,
       login: params.login,
       password: params.password,
+      phone: params.phone,
     );
   }
 
@@ -15,6 +16,8 @@ class RegisterMapper {
       name: request.name,
       login: request.login,
       password: request.password,
+      phone: request.phone,
     );
   }
+
 }
